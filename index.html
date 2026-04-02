@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VoroWeb — Web Design & Development</title>
@@ -1406,14 +1407,23 @@ function sendForm() {
     msgEl.className = 'form-msg error';
     return;
   }
+  emailjs.send("service_4gbzyfq","template_idrgmma",{
+name: name,
+email: email,
+message: msg
+})
+.then(function(){
 
-  const subject = encodeURIComponent(`Web Inquiry from ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
-  window.open(`mailto:voro.webservice@gmail.com?subject=${subject}&body=${body}`);
+msgEl.textContent = "Message sent successfully!";
+msgEl.className = "form-msg success";
 
-  msgEl.textContent = '✓ Your email client has opened. Please send the message.';
-  msgEl.className = 'form-msg success';
+})
+.catch(function(){
 
+msgEl.textContent = "Failed to send message.";
+msgEl.className = "form-msg error";
+
+});
   document.getElementById('f-name').value = '';
   document.getElementById('f-email').value = '';
   document.getElementById('f-msg').value = '';
@@ -1506,6 +1516,11 @@ renderReviews();
     });
   }, { threshold: 0.12 });
   els.forEach(el => observer.observe(el));
+})();
+</script>
+  <script>
+(function(){
+emailjs.init("Ud-6WZYQpx9dNFoo8");
 })();
 </script>
 </body>
