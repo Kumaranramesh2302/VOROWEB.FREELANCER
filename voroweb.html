@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoroWeb — Web Design & Development</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.07);
+    --border-glow: rgba(120,80,255,0.3);
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --accent: #8b5cf6;
+    --accent2: #3b82f6;
+    --accent-glow: rgba(139,92,246,0.15);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── CANVAS BACKGROUND ── */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,8,16,0.6);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .logo span {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    padding: 0.5rem 1.4rem;
+    background: var(--accent);
+    color: var(--white) !important;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+    transition: opacity 0.2s, transform 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+  }
+
+  .hero-inner {
+    max-width: 780px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.1rem;
+    border: 1px solid var(--border-glow);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    background: var(--accent-glow);
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 .accent-word {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 2.8rem;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    border: none;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--white);
+    box-shadow: 0 0 30px rgba(139,92,246,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(139,92,246,0.5);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--surface-hover);
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+
+  /* ── SECTION COMMON ── */
+  .section-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section-pad {
+    padding: 7rem 0;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: transparent; }
+
+  .services-header {
+    margin-bottom: 3.5rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .service-card {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .service-card:hover::before { opacity: 1; }
+
+  .service-card:hover {
+    border-color: var(--border-glow);
+    background: var(--surface-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(139,92,246,0.08);
+  }
+
+  .service-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.4rem;
+    font-size: 1.2rem;
+  }
+
+  .service-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .service-card p {
+    font-size: 0.855rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── REVIEWS ── */
+  #reviews { background: transparent; }
+
+  .reviews-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .reviews-header .section-desc {
+    margin: 0 auto;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .reviews-top-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .review-card {
+    padding: 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s, transform 0.3s;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:none; }
+  }
+
+  .review-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-3px);
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 0.9rem;
+    font-size: 1rem;
+  }
+
+  .review-card blockquote {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.65;
+    font-style: italic;
+    margin-bottom: 1.1rem;
+    border: none;
+  }
+
+  .review-author {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'Sora', sans-serif;
+    font-style: normal;
+  }
+
+  .no-reviews-msg {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255,255,255,0.18);
+    font-size: 0.88rem;
+    font-style: italic;
+  }
+
+  /* ── REVIEW MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(4,4,12,0.85);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: #0f0f1c;
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 2.25rem;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1.25rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: var(--white); }
+
+  .modal-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+  }
+
+  .star-picker {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .star-picker span {
+    font-size: 1.6rem;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.15s, transform 0.15s;
+    user-select: none;
+  }
+
+  .star-picker span.lit { opacity: 1; }
+  .star-picker span:hover { transform: scale(1.15); }
+
+  /* ── SCHEDULE ── */
+  #schedule { background: transparent; }
+
+  .schedule-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .schedule-info h2 { margin-bottom: 1rem; }
+  .schedule-info .section-desc { margin-bottom: 2rem; }
+
+  .schedule-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .schedule-feat {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .schedule-feat .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .calendar-widget {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    backdrop-filter: blur(12px);
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .cal-header span {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--white);
+  }
+
+  .cal-nav {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .cal-nav button {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cal-nav button:hover {
+    background: var(--surface-hover);
+    color: var(--white);
+    border-color: var(--border-glow);
+  }
+
+  .cal-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .cal-days-header span {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 4px 0;
+    letter-spacing: 0.04em;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .cal-day:hover:not(.empty):not(.past) {
+    background: var(--accent-glow);
+    border-color: var(--border-glow);
+    color: var(--white);
+  }
+
+  .cal-day.today {
+    background: var(--accent);
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .cal-day.selected {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .cal-day.past { opacity: 0.25; cursor: default; }
+  .cal-day.empty { cursor: default; }
+
+  .cal-day.available { color: var(--text); }
+
+  .time-slots {
+    margin-top: 1.5rem;
+    display: none;
+  }
+
+  .time-slots.show { display: block; }
+
+  .time-slots-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .slot {
+    padding: 0.45rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    text-align: center;
+    cursor: pointer;
+    color: var(--muted);
+    background: transparent;
+    transition: all 0.2s;
+  }
+
+  .slot:hover, .slot.active {
+    border-color: var(--border-glow);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .cal-book-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: none;
+  }
+
+  .cal-book-btn.show { display: block; }
+  .cal-book-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ── CONTACT ── */
+  #contact { background: transparent; }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-info h2 { margin-bottom: 1rem; }
+  .contact-info .section-desc { margin-bottom: 2.5rem; }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .contact-item-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .contact-item-text span:first-child {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .contact-item-text a,
+  .contact-item-text span:last-child {
+    font-size: 0.9rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-item-text a:hover { color: var(--accent); }
+
+  /* ── FORM ── */
+  .contact-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.25rem;
+    backdrop-filter: blur(12px);
+  }
+
+  .form-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 1.75rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.15rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    resize: none;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: rgba(122,122,154,0.5);
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--border-glow);
+    background: rgba(139,92,246,0.05);
+  }
+
+  .form-group textarea { min-height: 120px; }
+
+  .form-submit {
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .form-submit:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139,92,246,0.25);
+  }
+
+  .form-msg {
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    text-align: center;
+    min-height: 1.2em;
+  }
+
+  .form-msg.success { color: #4ade80; }
+  .form-msg.error { color: #f87171; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    background: rgba(8,8,16,0.8);
+    backdrop-filter: blur(20px);
+    padding: 2.5rem 0 2rem;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer-logo {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--white);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+
+  .social-icon:hover {
+    border-color: var(--border-glow);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .footer-copy {
+    width: 100%;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: rgba(122,122,154,0.4);
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    .schedule-inner,
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .section-pad { padding: 5rem 0; }
+
+    .services-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    footer .footer-links { display: none; }
+    .footer-inner { justify-content: center; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .slots-grid { grid-template-columns: repeat(2,1fr); }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Nav -->
+<nav>
+  <div class="logo">Voro<span>Web</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(8,8,16,0.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;">
+  <div style="position:absolute;top:1.2rem;right:1.5rem;cursor:pointer;color:var(--muted);font-size:1.5rem;" onclick="toggleMenu()">✕</div>
+  <a href="#services" style="color:var(--white);text-decoration:none;font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:600;" onclick="toggleMenu()">Services</a>
+  <a href="#reviews" style="color:var(--white);text-decoration:none;font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:600;" onclick="toggleMenu()">Reviews</a>
+  <a href="#schedule" style="color:var(--white);text-decoration:none;font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:600;" onclick="toggleMenu()">Schedule</a>
+  <a href="#contact" style="color:var(--white);text-decoration:none;font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:600;" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Web Design & Development</div>
+    <h1>Modern Websites for<br><span class="accent-word">Growing Businesses</span></h1>
+    <p class="hero-sub">Clean, purposeful websites designed to perform. From concept to launch — built with care, structured to grow.</p>
+    <div class="btn-group">
+      <a href="#services" class="btn btn-primary">View Services</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- Services -->
+<section id="services" class="section-pad">
+  <div class="container">
+    <div class="services-header reveal">
+      <p class="section-label">What We Offer</p>
+      <h2 class="section-title">Services</h2>
+      <p class="section-desc">Everything you need to build a strong presence online — handled end to end.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🎨</div>
+        <h3>Website Design</h3>
+        <p>Thoughtful, clean layouts built around your brand identity and goals.</p>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.1s">
+        <div class="service-icon">⚙️</div>
+        <h3>Website Development</h3>
+        <p>Responsive, fast, and reliable development from the ground up.</p>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.2s">
+        <div class="service-icon">📄</div>
+        <h3>Landing Pages</h3>
+        <p>Focused pages built to convert visitors into real outcomes.</p>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.3s">
+        <div class="service-icon">⚡</div>
+        <h3>Website Optimization</h3>
+        <p>Speed, performance, and SEO improvements for existing sites.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- Reviews -->
+<section id="reviews" class="section-pad">
+  <div class="container">
+    <div class="reviews-top-bar reveal">
+      <div>
+        <p class="section-label">Client Feedback</p>
+        <h2 class="section-title">Reviews</h2>
+        <p class="section-desc">Honest words from people we've worked with.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openReviewModal()" style="flex-shrink:0;">✦ Give a Review</button>
+    </div>
+    <div class="reviews-grid" id="reviews-grid">
+      <p class="no-reviews-msg">No reviews yet — be the first to share your experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    <p class="modal-title">Leave a Review</p>
+    <p class="modal-sub">Your feedback helps others learn about our work.</p>
+    <div class="star-picker" id="star-picker">
+      <span onclick="setStar(1)">★</span>
+      <span onclick="setStar(2)">★</span>
+      <span onclick="setStar(3)">★</span>
+      <span onclick="setStar(4)">★</span>
+      <span onclick="setStar(5)">★</span>
+    </div>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="r-name" placeholder="e.g. John D.">
+    </div>
+    <div class="form-group">
+      <label>Your Review</label>
+      <textarea id="r-text" placeholder="Share your experience…" style="min-height:100px;"></textarea>
+    </div>
+    <button class="form-submit" onclick="submitReview()">Post Review</button>
+    <p class="form-msg" id="review-msg"></p>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Schedule -->
+<section id="schedule" class="section-pad">
+  <div class="container">
+    <div class="schedule-inner">
+      <div class="schedule-info reveal">
+        <p class="section-label">Book a Call</p>
+        <h2 class="section-title">Schedule a Meeting</h2>
+        <p class="section-desc">Pick a date and time that works for you. No pressure, just a casual chat about your project.</p>
+        <div class="schedule-features">
+          <div class="schedule-feat"><span class="dot"></span>30-minute discovery call</div>
+          <div class="schedule-feat"><span class="dot"></span>No commitment required</div>
+          <div class="schedule-feat"><span class="dot"></span>We'll discuss your goals and timeline</div>
+          <div class="schedule-feat"><span class="dot"></span>Get a clear picture of next steps</div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <div class="calendar-widget">
+          <div class="cal-header">
+            <span id="cal-month-label">April 2026</span>
+            <div class="cal-nav">
+              <button onclick="calNav(-1)" title="Previous">‹</button>
+              <button onclick="calNav(1)" title="Next">›</button>
+            </div>
+          </div>
+          <div class="cal-days-header">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+            <span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="time-slots" id="time-slots">
+            <p class="time-slots-label">Available times</p>
+            <div class="slots-grid">
+              <div class="slot" onclick="selectSlot(this)">9:00 AM</div>
+              <div class="slot" onclick="selectSlot(this)">10:00 AM</div>
+              <div class="slot" onclick="selectSlot(this)">11:00 AM</div>
+              <div class="slot" onclick="selectSlot(this)">2:00 PM</div>
+              <div class="slot" onclick="selectSlot(this)">3:00 PM</div>
+              <div class="slot" onclick="selectSlot(this)">4:00 PM</div>
+            </div>
+          </div>
+          <button class="cal-book-btn" id="cal-book-btn" onclick="bookMeeting()">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- Contact -->
+<section id="contact" class="section-pad">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-label">Get in Touch</p>
+        <h2 class="section-title">Let's Talk</h2>
+        <p class="section-desc">Have a project in mind or just want to ask a question? Send a message and we'll get back to you.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div class="contact-item-text">
+              <span>Phone</span>
+              <a href="tel:9360998924">9360998924</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">✉️</div>
+            <div class="contact-item-text">
+              <span>Email</span>
+              <a href="mailto:voro.webservice@gmail.com">voro.webservice@gmail.com</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📸</div>
+            <div class="contact-item-text">
+              <span>Instagram</span>
+              <a href="https://www.instagram.com/voroweb/" target="_blank" rel="noopener">@voroweb</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal" style="transition-delay:0.15s">
+        <p class="form-title">Send a Message</p>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="f-name" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="f-email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="f-msg" placeholder="Tell us about your project or question…"></textarea>
+        </div>
+        <button class="form-submit" onclick="sendForm()">Send Message</button>
+        <p class="form-msg" id="form-msg"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Voro<span>Web</span></div>
+      <ul class="footer-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/voroweb/" target="_blank" rel="noopener" class="social-icon" title="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <p class="footer-copy">© 2026 VoroWeb. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+/* ── ANIMATED PARTICLE MESH BACKGROUND ── */
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId;
+  const COUNT = 90;
+  const MAX_DIST = 140;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  function Particle() {
+    this.x = rand(0, W);
+    this.y = rand(0, H);
+    this.vx = rand(-0.18, 0.18);
+    this.vy = rand(-0.18, 0.18);
+    this.r = rand(1, 2.2);
+    this.alpha = rand(0.2, 0.55);
+  }
+
+  function init() {
+    particles = [];
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Subtle gradient orbs
+    const grad1 = ctx.createRadialGradient(W * 0.25, H * 0.3, 0, W * 0.25, H * 0.3, W * 0.38);
+    grad1.addColorStop(0, 'rgba(88,28,230,0.07)');
+    grad1.addColorStop(1, 'rgba(88,28,230,0)');
+    ctx.fillStyle = grad1;
+    ctx.fillRect(0, 0, W, H);
+
+    const grad2 = ctx.createRadialGradient(W * 0.75, H * 0.65, 0, W * 0.75, H * 0.65, W * 0.32);
+    grad2.addColorStop(0, 'rgba(37,99,235,0.06)');
+    grad2.addColorStop(1, 'rgba(37,99,235,0)');
+    ctx.fillStyle = grad2;
+    ctx.fillRect(0, 0, W, H);
+
+    // Particles
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+      if (p.y < -10) p.y = H + 10;
+      if (p.y > H + 10) p.y = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(160,130,255,${p.alpha})`;
+      ctx.fill();
+
+      // Lines
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          const alpha = (1 - dist / MAX_DIST) * 0.12;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(139,92,246,${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+    animId = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  init();
+  draw();
+})();
+
+/* ── MOBILE MENU ── */
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+}
+
+/* ── CALENDAR ── */
+let calDate = new Date(2026, 3, 1); // April 2026
+let selectedDay = null, selectedSlot = null;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function calNav(dir) {
+  calDate.setMonth(calDate.getMonth() + dir);
+  selectedDay = null;
+  document.getElementById('time-slots').classList.remove('show');
+  document.getElementById('cal-book-btn').classList.remove('show');
+  renderCal();
+}
+
+function renderCal() {
+  const grid = document.getElementById('cal-grid');
+  document.getElementById('cal-month-label').textContent = MONTHS[calDate.getMonth()] + ' ' + calDate.getFullYear();
+  grid.innerHTML = '';
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    const thisDate = new Date(y, m, d);
+    const isToday = today.toDateString() === thisDate.toDateString();
+    const isPast = thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const isWeekend = thisDate.getDay() === 0 || thisDate.getDay() === 6;
+
+    el.textContent = d;
+    el.className = 'cal-day';
+    if (isToday) el.classList.add('today');
+    else if (isPast || isWeekend) el.classList.add('past');
+    else el.classList.add('available');
+
+    if (!isPast && !isWeekend) {
+      el.onclick = () => selectDay(el, d);
+    }
+    if (selectedDay === d && !isPast && !isWeekend) el.classList.add('selected');
+    grid.appendChild(el);
+  }
+}
+
+function selectDay(el, d) {
+  document.querySelectorAll('.cal-day').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDay = d;
+  selectedSlot = null;
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+  document.getElementById('time-slots').classList.add('show');
+  document.getElementById('cal-book-btn').classList.remove('show');
+}
+
+function selectSlot(el) {
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  selectedSlot = el.textContent;
+  document.getElementById('cal-book-btn').classList.add('show');
+}
+
+function bookMeeting() {
+  if (!selectedDay || !selectedSlot) return;
+  const m = MONTHS[calDate.getMonth()];
+  const y = calDate.getFullYear();
+  const subject = encodeURIComponent(`Meeting Request — ${m} ${selectedDay}, ${y} at ${selectedSlot}`);
+  const body = encodeURIComponent(`Hello,\n\nI'd like to schedule a meeting on ${m} ${selectedDay}, ${y} at ${selectedSlot}.\n\nPlease confirm availability.\n\nThank you.`);
+  window.open(`mailto:voro.webservice@gmail.com?subject=${subject}&body=${body}`);
+}
+
+renderCal();
+
+/* ── CONTACT FORM ── */
+function sendForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const msg = document.getElementById('f-msg').value.trim();
+  const msgEl = document.getElementById('form-msg');
+
+  if (!name || !email || !msg) {
+    msgEl.textContent = 'Please fill in all fields.';
+    msgEl.className = 'form-msg error';
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msgEl.textContent = 'Please enter a valid email address.';
+    msgEl.className = 'form-msg error';
+    return;
+  }
+
+  const subject = encodeURIComponent(`Web Inquiry from ${name}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+  window.open(`mailto:voro.webservice@gmail.com?subject=${subject}&body=${body}`);
+
+  msgEl.textContent = '✓ Your email client has opened. Please send the message.';
+  msgEl.className = 'form-msg success';
+
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-msg').value = '';
+}
+
+/* ── REVIEW SYSTEM ── */
+let currentStars = 0;
+
+function openReviewModal() {
+  document.getElementById('review-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReviewModal() {
+  document.getElementById('review-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentStars = 0;
+  updateStarUI();
+  document.getElementById('r-name').value = '';
+  document.getElementById('r-text').value = '';
+  document.getElementById('review-msg').textContent = '';
+}
+
+function setStar(n) {
+  currentStars = n;
+  updateStarUI();
+}
+
+function updateStarUI() {
+  document.querySelectorAll('#star-picker span').forEach((s, i) => {
+    s.classList.toggle('lit', i < currentStars);
+  });
+}
+
+function submitReview() {
+  const name = document.getElementById('r-name').value.trim();
+  const text = document.getElementById('r-text').value.trim();
+  const msgEl = document.getElementById('review-msg');
+
+  if (!currentStars) { msgEl.textContent = 'Please select a star rating.'; msgEl.className = 'form-msg error'; return; }
+  if (!name) { msgEl.textContent = 'Please enter your name.'; msgEl.className = 'form-msg error'; return; }
+  if (!text) { msgEl.textContent = 'Please write a short review.'; msgEl.className = 'form-msg error'; return; }
+
+  const reviews = getReviews();
+  reviews.push({ name, text, stars: currentStars, date: Date.now() });
+  localStorage.setItem('voro_reviews', JSON.stringify(reviews));
+  renderReviews();
+
+  msgEl.textContent = '✓ Thank you! Your review has been posted.';
+  msgEl.className = 'form-msg success';
+  setTimeout(closeReviewModal, 1500);
+}
+
+function getReviews() {
+  try { return JSON.parse(localStorage.getItem('voro_reviews')) || []; }
+  catch { return []; }
+}
+
+function renderReviews() {
+  const grid = document.getElementById('reviews-grid');
+  const reviews = getReviews();
+  if (!reviews.length) {
+    grid.innerHTML = '<p class="no-reviews-msg">No reviews yet — be the first to share your experience.</p>';
+    return;
+  }
+  grid.innerHTML = reviews.slice().reverse().map(r => `
+    <div class="review-card">
+      <div class="review-stars">${'★'.repeat(r.stars)}<span style="opacity:0.2">${'★'.repeat(5 - r.stars)}</span></div>
+      <blockquote>"${r.text}"</blockquote>
+      <p class="review-author">— ${r.name}</p>
+    </div>
+  `).join('');
+}
+
+document.getElementById('review-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeReviewModal();
+});
+
+renderReviews();
+
+/* ── SCROLL REVEAL ── */
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => observer.observe(el));
+})();
+</script>
+</body>
+</html>
